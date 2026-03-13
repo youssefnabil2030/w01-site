@@ -1,8 +1,6 @@
 {
   "name": "w01-site",
   "version": "1.0.0",
-  "description": "My website",
-  "main": "index.js",
   "scripts": {
     "start": "node index.js"
   }
