@@ -12,5 +12,6 @@ const getAllOrganizations = async () => {
 };
 
 export default {
+  getAll: getAllOrganizations,
   getAllOrganizations
 };
