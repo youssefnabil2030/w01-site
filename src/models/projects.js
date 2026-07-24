@@ -8,6 +8,7 @@ const DEFAULT_IMAGES = [
   "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&auto=format&fit=crop&q=80"
 ];
 
+// 1. جلب كل المشاريع (كودك الأصلي)
 const getAllProjects = async () => {
   try {
     const sql = "SELECT * FROM public.projects ORDER BY name ASC";
@@ -23,7 +24,51 @@ const getAllProjects = async () => {
   }
 };
 
+// 2. جلب مشروع واحد بالـ ID (جديد للـ Details page)
+const getProjectById = async (id) => {
+  try {
+    const sql = `
+      SELECT p.*, o.name AS organization_name 
+      FROM public.projects p
+      LEFT JOIN public.organizations o ON p.organization_id = o.id
+      WHERE p.id = $1
+    `;
+    const result = await db.query(sql, [id]);
+    
+    if (result.rows.length === 0) return null;
+
+    const project = result.rows[0];
+    return {
+      ...project,
+      image_url: DEFAULT_IMAGES[project.id % DEFAULT_IMAGES.length] || DEFAULT_IMAGES[0]
+    };
+  } catch (error) {
+    console.error("Error inside getProjectById model: ", error);
+    throw error;
+  }
+};
+
+// 3. جلب المؤسسات (تم تحويل pool إلى db لتوحيد الاتصال)
+const getOrganizations = async () => {
+  try {
+    const sql = "SELECT organization_id, name, description, contact_email, logo_filename, location, date_created FROM public.organizations ORDER BY name ASC";
+    const result = await db.query(sql);
+    return result.rows;
+  } catch (error) {
+    console.error("getOrganizations error: " + error);
+    return [];
+  }
+};
+
 export default {
   getAll: getAllProjects,
-  getAllProjects
+  getAllProjects,
+  getProjectById,
+  getOrganizations
+};
+
+export {
+  getAllProjects,
+  getProjectById,
+  getOrganizations
 };
