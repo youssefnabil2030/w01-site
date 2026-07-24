@@ -24,5 +24,6 @@ const getAllProjects = async () => {
 };
 
 export default {
+  getAll: getAllProjects,
   getAllProjects
 };
