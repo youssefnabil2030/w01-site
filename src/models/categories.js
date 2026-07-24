@@ -33,5 +33,6 @@ const getAllCategories = async () => {
 };
 
 export default {
+  getAll: getAllCategories,
   getAllCategories
 };
